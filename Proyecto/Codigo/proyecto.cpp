@@ -47,6 +47,7 @@ Camera camera;
 
 Texture pisoTexture;
 
+//modelos de cocina
 Model mesa_centro;
 Model mesa_centro_aceite;
 Model mesa_centro_freidora1;
@@ -55,6 +56,62 @@ Model mesa_centro_puerta1;
 Model mesa_centro_puerta2;
 Model mesa_centro_puerta3;
 Model mesa_centro_puerta4;
+Model estructura;
+Model lavadero;
+Model mesa1;
+Model mesa2;
+Model puerta_metal;
+Model mesa_ext_1;
+Model mesa_ext_2;
+Model mesa_ext_3;
+Model silla_ext_1;
+Model silla_ext_2;
+Model silla_ext_3;
+Model silla_ext_4;
+Model silla_ext_5;
+Model silla_ext_6;
+Model silla_ext_7;
+Model silla_ext_8;
+Model silla_ext_9;
+Model silla_ext_10;
+Model silla_ext_11;
+Model silla_ext_12;
+Model puerta_ext_1;
+Model puerta_ext_2;
+Model estante_1;
+Model estante_2;
+Model refri_1;
+Model refri_2;
+Model refri_3;
+Model refri_puerta_1;
+Model refri_puerta_2;
+Model refri_puerta_3;
+Model papas_1;
+Model papas_2;
+Model papas_3;
+Model papas_bolsa_1;
+Model papas_bolsa_2;
+Model papas_bolsa_3;
+Model plato_1;
+Model plato_2;
+Model olla_1;
+Model olla_2;
+Model olla_3;
+Model cucharon;
+Model tabla;
+Model pan_1;
+Model pan_2;
+Model carne;
+Model lechuga;
+Model jitomate;
+Model plato_sucio_1;
+Model plato_sucio_2;
+Model trastes_sucios;
+Model estropajo_1;
+Model estropajo_2;
+Model extractor_1;
+Model extractor_2;
+
 
 Skybox skybox;
 
@@ -207,6 +264,9 @@ int main()
 	pisoTexture = Texture("Textures/piso.tga");
 	pisoTexture.LoadTextureA();
 
+
+
+
 	mesa_centro = Model();
 	mesa_centro.LoadModel("Models/mesa_centro.obj");
 	mesa_centro_aceite = Model();
@@ -220,11 +280,120 @@ int main()
 	mesa_centro_puerta2 = Model();
 	mesa_centro_puerta2.LoadModel("Models/mesa_centro_puerta2.obj");
 	mesa_centro_puerta3 = Model();
-	mesa_centro_puerta3.LoadModel("Models/mesa_centro_puert3.obj");
+	mesa_centro_puerta3.LoadModel("Models/mesa_centro_puerta3.obj");
 	mesa_centro_puerta4 = Model();
 	mesa_centro_puerta4.LoadModel("Models/mesa_centro_puerta4.obj");
+	estructura = Model();
+	estructura.LoadModel("Models/estructura.obj");
+	lavadero = Model();
+	lavadero.LoadModel("Models/lavadero.obj");
+	mesa1 = Model();
+	mesa1.LoadModel("Models/mesa1.obj");
+	mesa2 = Model();
+	mesa2.LoadModel("Models/mesa2.obj");
+	puerta_metal = Model();
+	puerta_metal.LoadModel("Models/puerta_metal.obj");
+	mesa_ext_1 = Model();
+	mesa_ext_1.LoadModel("Models/mesa_ext_1.obj");
+	mesa_ext_2 = Model();
+	mesa_ext_2.LoadModel("Models/mesa_ext_2.obj");
+	mesa_ext_3 = Model();
+	mesa_ext_3.LoadModel("Models/mesa_ext_3.obj");
+	silla_ext_1 = Model();
+	silla_ext_1.LoadModel("Models/silla_ext_1.obj");
+	silla_ext_2 = Model();
+	silla_ext_2.LoadModel("Models/silla_ext_2.obj");
+	silla_ext_3 = Model();
+	silla_ext_3.LoadModel("Models/silla_ext_3.obj");
+	silla_ext_4 = Model();
+	silla_ext_4.LoadModel("Models/silla_ext_4.obj");
+	silla_ext_5 = Model();
+	silla_ext_5.LoadModel("Models/silla_ext_5.obj");
+	silla_ext_6 = Model();
+	silla_ext_6.LoadModel("Models/silla_ext_6.obj");
+	silla_ext_7 = Model();
+	silla_ext_7.LoadModel("Models/silla_ext_7.obj");
+	silla_ext_8 = Model();
+	silla_ext_8.LoadModel("Models/silla_ext_8.obj");
+	silla_ext_9 = Model();
+	silla_ext_9.LoadModel("Models/silla_ext_9.obj");
+	silla_ext_10 = Model();
+	silla_ext_10.LoadModel("Models/silla_ext_10.obj");
+	silla_ext_11 = Model();
+	silla_ext_11.LoadModel("Models/silla_ext_11.obj");
+	silla_ext_12 = Model();
+	silla_ext_12.LoadModel("Models/silla_ext_12.obj");
+	puerta_ext_1 = Model();
+	puerta_ext_1.LoadModel("Models/puerta_ext_1.obj");
+	puerta_ext_2 = Model();
+	puerta_ext_2.LoadModel("Models/puerta_ext_2.obj");
+	estante_1 = Model();
+	estante_1.LoadModel("Models/estante_1.obj");
+	estante_2 = Model();
+	estante_2.LoadModel("Models/estante_2.obj");
+	refri_1 = Model();
+	refri_1.LoadModel("Models/refri_1.obj");
+	refri_2 = Model();
+	refri_2.LoadModel("Models/refri_2.obj");
+	refri_3 = Model();
+	refri_3.LoadModel("Models/refri_3.obj");
+	refri_puerta_1 = Model();
+	refri_puerta_1.LoadModel("Models/refri_puerta_1.obj");
+	refri_puerta_2 = Model();
+	refri_puerta_2.LoadModel("Models/refri_puerta_2.obj");
+	refri_puerta_3 = Model();
+	refri_puerta_3.LoadModel("Models/refri_puerta_3.obj");
+	papas_1 = Model();
+	papas_1.LoadModel("Models/papas_1.obj");
+	papas_2 = Model();
+	papas_2.LoadModel("Models/papas_2.obj");
+	papas_3 = Model();
+	papas_3.LoadModel("Models/papas_3.obj");
+	papas_bolsa_1 = Model();
+	papas_bolsa_1.LoadModel("Models/papas_bolsa_1.obj");
+	papas_bolsa_2 = Model();
+	papas_bolsa_2.LoadModel("Models/papas_bolsa_2.obj");
+	papas_bolsa_3 = Model();
+	papas_bolsa_3.LoadModel("Models/papas_bolsa_3.obj");
+	plato_1 = Model();
+	plato_1.LoadModel("Models/plato_1.obj");
+	plato_2 = Model();
+	plato_2.LoadModel("Models/plato_2.obj");
+	olla_1 = Model();
+	olla_1.LoadModel("Models/olla_1.obj");
+	olla_2 = Model();
+	olla_2.LoadModel("Models/olla_2.obj");
+	olla_3 = Model();
+	olla_3.LoadModel("Models/olla_3.obj");
+	cucharon = Model();
+	cucharon.LoadModel("Models/cucharon.obj");
+	tabla = Model();
+	tabla.LoadModel("Models/tabla.obj");
+	pan_1 = Model();
+	pan_1.LoadModel("Models/pan_1.obj");
+	pan_2 = Model();
+	pan_2.LoadModel("Models/pan_2.obj");
+	carne = Model();
+	carne.LoadModel("Models/carne.obj");
+	lechuga = Model();
+	lechuga.LoadModel("Models/lechuga.obj");
+	jitomate = Model();
+	jitomate.LoadModel("Models/jitomate.obj");
+	plato_sucio_1 = Model();
+	plato_sucio_1.LoadModel("Models/plato_sucio_1.obj");
+	plato_sucio_2 = Model();
+	plato_sucio_2.LoadModel("Models/plato_sucio_2.obj");
+	trastes_sucios = Model();
+	trastes_sucios.LoadModel("Models/trastes_sucios.obj");
+	estropajo_1 = Model();
+	estropajo_1.LoadModel("Models/estropajo_1.obj");
+	estropajo_2 = Model();
+	estropajo_2.LoadModel("Models/estropajo_2.obj");
+	extractor_1 = Model();
+	extractor_1.LoadModel("Models/extractor_1.obj");
+	extractor_2 = Model();
+	extractor_2.LoadModel("Models/extractor_2.obj");
 
-	
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -255,24 +424,30 @@ int main()
 	pointLightCount++;
 	*/
 	unsigned int spotLightCount = 0;
-	//linterna
+	//luces del interior
 	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f, //color
 		0.0f, 2.0f,				//aln dln
-		0.0f, 0.0f, 0.0f,		//pos
+		0.0f, 0.0f, 0.0f, 		//pos
 		0.0f, -1.0f, 0.0f,		//direc
 		1.0f, 0.0f, 0.0f,		//poli
-		25.0f);					//tam
+		10.0f);					//tam
 	spotLightCount++;
 
-	//luz fija del helicoptero
 	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f, //color blanco
 		0.0f, 2.0f,				//aln dln
-		0.0f, 0.0f, 0.0f,		//pos
+		-3.5f, 3.8f, -2.7f, 	//pos
 		0.0f, -1.0f, 0.0f,		//direc
 		1.0f, 0.0f, 0.0f,		//poli
-		15.0f);					//tam
+		30.0f);					//tam
 	spotLightCount++;
-		
+
+	spotLights[2] = SpotLight(1.0f, 1.0f, 1.0f, //color blanco
+		0.0f, 2.0f,				//aln dln
+		-3.5f, 3.8f, 4.6f, 		//pos
+		0.0f, -1.0f, 0.0f,		//direc
+		1.0f, 0.0f, 0.0f,		//poli
+		30.0f);					//tam
+	spotLightCount++;
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
@@ -321,61 +496,336 @@ int main()
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 		glm::mat4 model(1.0);
-
+		
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		pisoTexture.UseTexture();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
+		
 
-		/*
+		
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa_centro.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta3.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta4.RenderModel();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_aceite.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa_centro_freidora1.RenderModel();
-		*/
+
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa_centro_freidora2.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_aceite.RenderModel();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta1.RenderModel();
 
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta2.RenderModel();
 
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta3.RenderModel();
 
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta4.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		estructura.RenderModel();
+		
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		lavadero.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		puerta_metal.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_ext_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_ext_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_ext_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_4.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_5.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_6.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_7.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_8.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_9.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_10.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_11.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		silla_ext_12.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		puerta_ext_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		puerta_ext_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		estante_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		estante_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_puerta_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_puerta_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_puerta_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_bolsa_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_bolsa_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_bolsa_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		olla_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		olla_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		olla_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		cucharon.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		tabla.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		pan_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		pan_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		carne.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		lechuga.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		jitomate.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_sucio_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_sucio_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		trastes_sucios.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		estropajo_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		estropajo_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		extractor_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		extractor_2.RenderModel();
+
+		/**/
 
 		glUseProgram(0);
-
 		mainWindow.swapBuffers();
 	}
 

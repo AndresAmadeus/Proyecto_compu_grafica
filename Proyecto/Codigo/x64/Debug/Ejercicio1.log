@@ -1,0 +1,29 @@
+﻿  Camera.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Camera.h(3,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  DirectionalLight.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Light.h(3,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Light.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Light.h(3,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Material.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Material.h(3,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Mesh_tn.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Mesh.h(3,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Model.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Model.h(4,9): fatal error C1083: No se puede abrir el archivo incluir: 'assimp/Importer.hpp': No such file or directory
+  PointLight.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Light.h(3,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  proyecto.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\proyecto.cpp(15,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Shader_light.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Shader_light.h(7,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Skybox.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Skybox.h(6,9): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Sphere.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\definition.h(11,10): fatal error C1083: No se puede abrir el archivo incluir: 'glm.hpp': No such file or directory
+  SpotLight.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Light.h(3,10): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Texture.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Texture.h(2,9): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Window.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\Codigo\Window.h(3,9): fatal error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  Generando código...
