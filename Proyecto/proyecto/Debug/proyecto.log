@@ -1,0 +1,6 @@
+﻿  proyecto.cpp
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\proyecto\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\proyecto\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\proyecto\proyecto.cpp(512,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\proyecto\proyecto.cpp(514,43): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+  proyecto.vcxproj -> D:\Usuarios\Amadeus\OneDrive - UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\documentos PDF\CompuGrafica\Proyecto_github\Proyecto_compu_grafica\Proyecto\proyecto\Debug\proyecto.exe
