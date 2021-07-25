@@ -17,6 +17,28 @@ public:
 	//animaciones
 	bool get_btn_1() { return btn_1; }
 	void res_btn_1() { btn_1 = false; }
+	bool get_btn_2() { return btn_2; }
+	void res_btn_2() { btn_2 = false; }
+	bool get_btn_3() { return btn_3; }
+	void res_btn_3() { btn_3 = false; }
+	bool get_btn_4() { return btn_4; }
+	void res_btn_4() { btn_4 = false; }
+	bool get_btn_5() { return btn_5; }
+	void res_btn_5() { btn_5 = false; }
+	bool get_btn_6() { return btn_6; }
+	void res_btn_6() { btn_6 = false; }
+	bool get_btn_7() { return btn_7; }
+	void res_btn_7() { btn_7 = false; }
+	bool get_btn_8() { return btn_8; }
+	void res_btn_8() { btn_8 = false; }
+	bool get_btn_p() { return btn_p; }
+	void res_btn_p() { btn_p = false; }
+	bool get_btn_o() { return btn_o; }
+	void res_btn_o() { btn_o = false; }
+	bool get_btn_l() { return btn_l; }
+	void res_btn_l() { btn_l = false; }
+	bool get_btn_i() { return btn_i; }
+	void res_btn_i() { btn_i = false; }
 
 	GLfloat getmuevex() { return muevex; }
 	GLfloat getmuevez() { return muevez; }
@@ -42,6 +64,17 @@ private:
 
 	//animaciones
 	bool btn_1 = false;
+	bool btn_2 = false;
+	bool btn_3 = false;
+	bool btn_4 = false;
+	bool btn_5 = false;
+	bool btn_6 = false;
+	bool btn_7 = false;
+	bool btn_8 = false;
+	bool btn_p = false;
+	bool btn_o = false;
+	bool btn_l = false;
+	bool btn_i = false;
 
 	GLfloat muevex;
 	GLfloat muevez;

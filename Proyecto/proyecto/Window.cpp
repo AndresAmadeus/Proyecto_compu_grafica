@@ -111,15 +111,15 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 
-	GLfloat delta = 0.025;
+	GLfloat delta = 0.01;
 
 	if (key == GLFW_KEY_Y)
 	{
 		theWindow-> muevex += delta;
 	}
-	if (key == GLFW_KEY_U)
+	if (key == GLFW_KEY_T)
 	{
-		theWindow-> muevex -= delta;
+		theWindow->muevex -= delta;
 	}
 	if (key == GLFW_KEY_H)
 	{
@@ -143,7 +143,39 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_1) {
 		theWindow->btn_1 = true;
 	}
-	
+	if (key == GLFW_KEY_2) {
+		theWindow->btn_2 = true;
+	}
+	if (key == GLFW_KEY_3) {
+		theWindow->btn_3 = true;
+	}
+	if (key == GLFW_KEY_4) {
+		theWindow->btn_4 = true;
+	}
+	if (key == GLFW_KEY_5) {
+		theWindow->btn_5 = true;
+	}
+	if (key == GLFW_KEY_6) {
+		theWindow->btn_6 = true;
+	}
+	if (key == GLFW_KEY_7) {
+		theWindow->btn_7 = true;
+	}
+	if (key == GLFW_KEY_8) {
+		theWindow->btn_8 = true;
+	}
+	if (key == GLFW_KEY_P) {
+		theWindow->btn_p = true;
+	}
+	if (key == GLFW_KEY_O) {
+		theWindow->btn_o = true;
+	}
+	if (key == GLFW_KEY_L) {
+		theWindow->btn_l = true;
+	}
+	if (key == GLFW_KEY_I) {
+		theWindow->btn_i = true;
+	}
 
 
 

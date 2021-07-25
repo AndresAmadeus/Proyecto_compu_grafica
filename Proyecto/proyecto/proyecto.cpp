@@ -27,9 +27,17 @@ Cambios en el shader, en lugar de enviar la textura en el shader de fragmentos, 
 #include "Camera.h"
 #include "Texture.h"
 #include "Sphere.h"
-#include"Model.h"
+#include "Model.h"
 #include "Skybox.h"
 
+//sonido
+#include<iostream>
+#include<conio.h>
+#include<Windows.h>
+#include<mmsystem.h>
+#include <thread>
+#include <string>
+using namespace std;
 
 //para iluminación
 #include "CommonValues.h"
@@ -92,6 +100,7 @@ Model papas_3;
 Model papas_bolsa_1;
 Model papas_bolsa_2;
 Model papas_bolsa_3;
+Model papas_pinzas;
 Model plato_1;
 Model plato_2;
 Model olla_1;
@@ -111,7 +120,7 @@ Model estropajo_1;
 Model estropajo_2;
 Model extractor_1;
 Model extractor_2;
-
+Model chef;
 
 Skybox skybox;
 
@@ -137,6 +146,30 @@ static const char* vShader = "shaders/shader_light.vert";
 
 // Fragment Shader
 static const char* fShader = "shaders/shader_light.frag";
+
+//Sonidos
+void play_music(int n) {
+	switch (n) {
+	case 1:
+		PlaySound(TEXT("Sounds/07019076.wav"), NULL, SND_ASYNC | SND_NOSTOP | SND_LOOP);
+		break; //fondo
+	case 2:
+		PlaySound(TEXT("Sounds/bbc_household _07002109.wav"), NULL, SND_ASYNC);
+		break; //servir
+	case 3:
+		PlaySound(TEXT("Sounds/bbc_household _07067001.wav"), NULL, SND_ASYNC);
+		break; //lavar
+	case 4:
+		PlaySound(TEXT("Sounds/bbc_kitchen ap_07011060.wav"), NULL, SND_ASYNC);
+		break; //puerta pequeña
+	case 5:
+		PlaySound(TEXT("Sounds/bbc_steel door_07037627.wav"), NULL, SND_ASYNC );
+		break; //metal abrir
+	}
+	
+}
+
+
 
 
 //cálculo del promedio de las normales para sombreado de Phong
@@ -352,6 +385,8 @@ int main()
 	papas_bolsa_2.LoadModel("Models/papas_bolsa_2.obj");
 	papas_bolsa_3 = Model();
 	papas_bolsa_3.LoadModel("Models/papas_bolsa_3.obj");
+	papas_pinzas = Model();
+	papas_pinzas.LoadModel("Models/papas_pinzas.obj");
 	plato_1 = Model();
 	plato_1.LoadModel("Models/plato_1.obj");
 	plato_2 = Model();
@@ -390,6 +425,8 @@ int main()
 	extractor_1.LoadModel("Models/extractor_1.obj");
 	extractor_2 = Model();
 	extractor_2.LoadModel("Models/extractor_2.obj");
+	chef = Model();
+	chef.LoadModel("Models/chef.obj");
 
 
 	std::vector<std::string> skyboxFaces;
@@ -427,9 +464,10 @@ int main()
 		0.0f, 0.0f, 0.0f, 		//pos
 		0.0f, -1.0f, 0.0f,		//direc
 		1.0f, 0.0f, 0.0f,		//poli
-		1.0f);					//tam
+		15.0f);					//tam
 	spotLightCount++;
 	
+	/*
 	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f, //color blanco
 		0.0f, 2.0f,				//aln dln
 		-3.5f, 4.5f, -4.7f, 	//pos
@@ -445,15 +483,8 @@ int main()
 		3.0f, 0.0f, 0.0f,		//poli
 		80.0f);					//tam
 	spotLightCount++;
-
-	spotLights[3] = SpotLight(1.0f, 1.0f, 1.0f, //color blanco
-		0.0f, 2.0f,				//aln dln
-		-0.0f, 4.5f, -4.6f, 	//pos
-		0.0f, -1.0f, 0.0f,		//direc
-		2.0f, 0.0f, 0.0f,		//poli
-		80.0f);					//tam
-	spotLightCount++;
-	/*
+	/**/
+	
 	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f, //color blanco
 		0.0f, 2.0f,				//aln dln
 		4.7f, 4.5f, -4.6f, 	//pos
@@ -465,6 +496,15 @@ int main()
 	spotLights[2] = SpotLight(1.0f, 1.0f, 1.0f, //color blanco
 		0.0f, 2.0f,				//aln dln
 		4.7f, 4.5f, -1.0f, 	//pos
+		0.0f, -1.0f, 0.0f,		//direc
+		2.0f, 0.0f, 0.0f,		//poli
+		80.0f);					//tam
+	spotLightCount++;
+	/*
+	
+	spotLights[3] = SpotLight(1.0f, 1.0f, 1.0f, //color blanco
+		0.0f, 2.0f,				//aln dln
+		-0.0f, 4.5f, -4.6f, 	//pos
 		0.0f, -1.0f, 0.0f,		//direc
 		2.0f, 0.0f, 0.0f,		//poli
 		80.0f);					//tam
@@ -500,18 +540,137 @@ int main()
 	
 
 	//Variables de animaciones
+	GLfloat del_mod = 100.0f;
+
+	//Sonido de animacion
+	bool musica_fondo = true;
+
 
 	//puerta_ext
-	GLfloat giro = 0.01f;
+	GLfloat ani_puerta_ext_tm = 0.0f;
+	bool ani_puerta_ext = false;
+	GLfloat giro = 0.0f;
+	GLfloat ani_puerta_ext_tm01 = 2.0f;
+	GLfloat ani_puerta_ext_tm01_std = true;
+
+	//puerta_cnt01
+	GLfloat ani_puerta_cnt01_tm = 0.0f;
+	bool ani_puerta_cnt01 = false;
+	GLfloat giro_puerta_cnt01 = 0.0f;
+	GLfloat ani_puerta_cnt01_tm01 = 2.0f;
+	GLfloat ani_puerta_cnt01_tm01_std = true;
+
+	//puerta_cnt02
+	GLfloat ani_puerta_cnt02_tm = 0.0f;
+	bool ani_puerta_cnt02 = false;
+	GLfloat giro_puerta_cnt02 = 0.0f;
+	GLfloat ani_puerta_cnt02_tm01 = 2.0f;
+	GLfloat ani_puerta_cnt02_tm01_std = true;
+
+	//puerta_cnt03
+	GLfloat ani_puerta_cnt03_tm = 0.0f;
+	bool ani_puerta_cnt03 = false;
+	GLfloat giro_puerta_cnt03 = 0.0f;
+	GLfloat ani_puerta_cnt03_tm01 = 2.0f;
+	GLfloat ani_puerta_cnt03_tm01_std = true;
+
+	//puerta_ref01
+	GLfloat ani_puerta_ref01_tm = 0.0f;
+	bool ani_puerta_ref01 = false;
+	GLfloat giro_puerta_ref01 = 0.0f;
+	GLfloat ani_puerta_ref01_tm01 = 2.0f;
+	GLfloat ani_puerta_ref01_tm01_std = true;
+
+	//puerta_ref01
+	GLfloat ani_puerta_ref02_tm = 0.0f;
+	bool ani_puerta_ref02 = false;
+	GLfloat giro_puerta_ref02 = 0.0f;
+	GLfloat ani_puerta_ref02_tm01 = 2.0f;
+	GLfloat ani_puerta_ref02_tm01_std = true;
+
+	//puerta_ref01
+	GLfloat ani_puerta_ref03_tm = 0.0f;
+	bool ani_puerta_ref03 = false;
+	GLfloat giro_puerta_ref03 = 0.0f;
+	GLfloat ani_puerta_ref03_tm01 = 2.0f;
+	GLfloat ani_puerta_ref03_tm01_std = true;
+
+	//puerta metal
+	GLfloat ani_puerta_mtl_tm = 0.0f;
+	bool ani_puerta_mtl = false;
+	GLfloat giro_puerta_mtl = 0.0f;
+	GLfloat ani_puerta_mtl_tm01 = 2.0f;
+	GLfloat ani_puerta_mtl_tm01_std = true;
+
+
+	//papas fritas
+	GLfloat ani_papas_tm = 0.0f;
+	GLfloat ani_papas_posX = 0.0f, ani_papas_posY = 0.0f;
+	GLfloat ani_papas_posX_P1 = 0.0f, ani_papas_posY_P1 = 0.0f;
+	GLfloat ani_papas_posX_P2 = 0.0f, ani_papas_posY_P2 = 0.0f;
+	GLfloat ani_papas_posX_P3 = 0.0f, ani_papas_posY_P3 = 0.0f;
+	bool ani_papas = false;
+	GLfloat ani_papas_tm01 = 2.0f;
+	GLfloat ani_papas_tm02 = 2*ani_papas_tm01;
+	GLfloat ani_papas_tm03 = 3*ani_papas_tm01;
+	GLfloat ani_papas_tm04 = 4*ani_papas_tm01;
+	GLfloat ani_papas_tm05 = 5*ani_papas_tm01;
+	
+	//Hamburguesa
+	GLfloat ani_ham_tm = 0.0f;
+	bool ani_ham = false;
+	GLfloat ani_ham_tm01 = 2.0f;
+	GLfloat ani_ham_tm02 = 2 * ani_ham_tm01;
+	GLfloat ani_ham_tm03 = 3 * ani_ham_tm01;
+	GLfloat ani_ham_tm04 = 4 * ani_ham_tm01;
+	GLfloat ani_ham_tm05 = 5 * ani_ham_tm01;
+	GLfloat ani_ham_posX_P1 = 0.0f, ani_ham_posY_P1 = 0.0f, ani_ham_posZ_P1 = 0.0f;
+	GLfloat ani_ham_posX_P2 = 0.0f, ani_ham_posY_P2 = 0.0f, ani_ham_posZ_P2 = 0.0f;
+	GLfloat ani_ham_posX_P3 = 0.0f, ani_ham_posY_P3 = 0.0f, ani_ham_posZ_P3 = 0.0f;
+	GLfloat ani_ham_posX_P4 = 0.0f, ani_ham_posY_P4 = 0.0f, ani_ham_posZ_P4 = 0.0f;
+	GLfloat ani_ham_posX_P5 = 0.0f, ani_ham_posY_P5 = 0.0f, ani_ham_posZ_P5 = 0.0f;
+
+
+	//Trastes sucios
+	GLfloat ani_tra_tm = 0.0f;
+	bool ani_tra = false;
+	GLfloat ani_tra_posZ = 0.0f, ani_tra_posY = 0.0f;
+	GLfloat ani_tra_posY_P1 = 0.0f, ani_tra_posY_P2 = 0.0f;
+	GLfloat ani_tra_tm01 = 2.0f;
+	GLfloat ani_tra_tm02 = 2 * ani_tra_tm01;
+	GLfloat ani_tra_tm03 = 3 * ani_tra_tm01;
+	GLfloat ani_tra_tm04 = 4 * ani_tra_tm01;
+	GLfloat ani_tra_tm05 = 5 * ani_tra_tm01;
+
+	//Extractores
+	GLfloat ani_extr = 0.0f;
+
+	//sopa
+	bool ani_sopa = false;
+	GLfloat ani_sopa_tm = 0.0f;
+	GLfloat ani_sopa_posX = 0.0, ani_sopa_posY = 0.0, ani_sopa_posZ = 0.0;
+	GLfloat ani_sopa_giro = 0.0f;
+	GLfloat ani_sopa_tm01 = 2.0f;
+	GLfloat ani_sopa_tm02 = ani_sopa_tm01 + 2.0f;
+	GLfloat ani_sopa_tm03 = ani_sopa_tm02 + 2.0f;
+	GLfloat ani_sopa_tm04 = ani_sopa_tm03 + 2.5f;
+	GLfloat ani_sopa_tm05 = ani_sopa_tm04 + 2.5f;
+	GLfloat ani_sopa_tm06 = ani_sopa_tm05 + 2.0f;
+	GLfloat ani_sopa_tm07 = ani_sopa_tm06 + 2.0f;
+	GLfloat ani_sopa_tm08 = ani_sopa_tm07 + 2.0f;
 
 	GLfloat x, z, y;
+
+	thread th_01, th_02, th_03, th_04, th_05, th_06;
+
+
 	
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
-		deltaTime += (now - lastTime) / limitFPS;
+		deltaTime += (now - lastTime) / (limitFPS);
 		lastTime = now;
 
 		//Recibir eventos del usuario
@@ -566,37 +725,664 @@ int main()
 		//---------------------------------ANIMACIONES--------------------------------------
 		//----------------------------------------------------------------------------------
 
-		//puerta_ext
-		if (mainWindow.get_btn_1()) {
-			giro = 90.0f;
-			printf("GIRO");
-			mainWindow.res_btn_1();
-		}
 
 		x = mainWindow.getmuevex();
 		z = mainWindow.getmuevez();
 		y = mainWindow.getmuevey();
 
-		printf(" %ff, %ff, %ff  \n", x, y, z);
+		printf(" %.2ff, %.2ff, %.2ff  \n", x, y, z);
+		//model = glm::translate(model, glm::vec3(0.0f + x, 0.0f + y, 0.0f + z));
+
+		//puerta_ext
+		if (mainWindow.get_btn_1()) {
+			mainWindow.res_btn_1();
+			ani_puerta_ext = true;
+			ani_puerta_ext_tm = 0.0f;
+		}
+
+		if (ani_puerta_ext) {
+			ani_puerta_ext_tm += deltaTime / del_mod;
+			if (ani_puerta_ext_tm < ani_puerta_ext_tm01) {
+				if (ani_puerta_ext_tm01_std) {
+					giro = 90.0f * (ani_puerta_ext_tm / ani_puerta_ext_tm01);
+				}
+				else {
+					giro = 90.0f - 90.0f * (ani_puerta_ext_tm / ani_puerta_ext_tm01);
+				}
+			} else {
+				ani_puerta_ext = false;
+				ani_puerta_ext_tm01_std = !ani_puerta_ext_tm01_std;
+			}
+		}
 
 		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3( -1.49f, 1.13f, -0.06f));
 		model = glm::rotate(model, giro * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.05f, 1.34f, 1.5f));
-		//model = glm::translate(model, glm::vec3(0.0f + x, 0.0f + y, 0.0f + z));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		puerta_ext_1.RenderModel();
 
 		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3( -1.49f, 1.13f, -2.54f));
 		model = glm::rotate(model, - giro * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		puerta_ext_2.RenderModel();
 
+		//papas fritas
+		if (mainWindow.get_btn_p()) {
+			mainWindow.res_btn_p();
+			ani_papas = true;
+			ani_papas_tm = 0.0f;
+			ani_papas_posX_P1 = 0;
+			ani_papas_posX_P2 = 0;
+			ani_papas_posX_P3 = 0;
+			ani_papas_posY_P1 = 0;
+			ani_papas_posY_P2 = 0;
+			ani_papas_posY_P3 = 0;
+		}
+
+		if (ani_papas) {
+			ani_papas_tm += deltaTime / del_mod;
+			if (ani_papas_tm < ani_papas_tm01) {
+				ani_papas_posX = 0.66 * ani_papas_tm / ani_papas_tm01;
+				ani_papas_posY = -4.014*pow((ani_papas_posX - 0.386),2) + 0.6;
+
+				ani_papas_posX_P1 = ani_papas_posX;
+				ani_papas_posY_P1 = ani_papas_posY;
+			}
+			else if (ani_papas_tm < ani_papas_tm02){
+				ani_papas_posX = 0.66 - 0.78 * (ani_papas_tm- ani_papas_tm01) / ani_papas_tm01;
+				ani_papas_posY = -2.873 * pow((ani_papas_posX - 0.336), 2) + 0.6;
+			}
+			else if (ani_papas_tm < ani_papas_tm03) {
+				ani_papas_posX = -0.12 + 0.93 *(ani_papas_tm - ani_papas_tm02) / ani_papas_tm01;
+				ani_papas_posY = -2.021 * pow((ani_papas_posX -0.424), 2) + 0.6;
+
+				ani_papas_posX_P2 = ani_papas_posX +0.12;
+				ani_papas_posY_P2 = ani_papas_posY;
+			}
+			else if (ani_papas_tm < ani_papas_tm04) {
+				ani_papas_posX = 0.81 - 1.06 *(ani_papas_tm - ani_papas_tm03) / ani_papas_tm01;
+				ani_papas_posY = -1.556 * pow((ani_papas_posX - 0.370), 2) + 0.6;
+			}
+			else if (ani_papas_tm < ani_papas_tm05) {
+				ani_papas_posX = -0.25 + 1.18 *(ani_papas_tm - ani_papas_tm04) / ani_papas_tm01;
+				ani_papas_posY = -1.255 * pow((ani_papas_posX - 0.441), 2) + 0.6;
+
+				ani_papas_posX_P3 = ani_papas_posX +0.25;
+				ani_papas_posY_P3 = ani_papas_posY;
+			}
+			else {
+				ani_papas = false;
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_papas_posX_P3, 0.0f + ani_papas_posY_P3, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_papas_posX_P2, 0.0f + ani_papas_posY_P2, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_papas_posX_P1, 0.0f + ani_papas_posY_P1, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_3.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_papas_posX, 0.0f + ani_papas_posY, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_pinzas.RenderModel();
+
+
+		//Servir platos de sopa
+		if (mainWindow.get_btn_i()) {
+			mainWindow.res_btn_i();
+			ani_sopa = true;
+			ani_sopa_tm = 0.0f;
+
+			thread th_02(play_music, 2);
+			if (th_02.joinable()) {
+				th_02.join();
+			}
+
+		}
+
+		if (ani_sopa) {
+			ani_sopa_tm += deltaTime / del_mod;
+			if (ani_sopa_tm < ani_sopa_tm01) {
+				ani_sopa_posX = 0.83 * (ani_sopa_tm / ani_sopa_tm01); 
+				ani_sopa_posY = -4.528 * pow( (ani_sopa_posX - 0.42) ,2) +0.8;
+				ani_sopa_posZ = -0.08 * (ani_sopa_tm / ani_sopa_tm01);
+			}
+			else if (ani_sopa_tm < ani_sopa_tm02) {
+				ani_sopa_giro = 70 * ((ani_sopa_tm - ani_sopa_tm01) / ani_sopa_tm01);
+			}
+			else if (ani_sopa_tm < ani_sopa_tm03) {
+				ani_sopa_giro = 70 - 70 * ((ani_sopa_tm - ani_sopa_tm02) / ani_sopa_tm01);
+			}
+			else if (ani_sopa_tm < ani_sopa_tm04) {
+				ani_sopa_posX = 0.83 - 0.83 * ((ani_sopa_tm - ani_sopa_tm03) / 2.5);
+				ani_sopa_posY = -4.528 * pow((ani_sopa_posX - 0.42), 2) + 0.8;
+				ani_sopa_posZ = -0.08 + 0.08 * ((ani_sopa_tm - ani_sopa_tm03) / 2.5);
+			}
+			else if (ani_sopa_tm < ani_sopa_tm05) {
+				ani_sopa_posX = 0.83 * ((ani_sopa_tm - ani_sopa_tm04) / 2.5);
+				ani_sopa_posY = -4.528 * pow((ani_sopa_posX - 0.42), 2) + 0.8;
+				ani_sopa_posZ = -0.32 * ((ani_sopa_tm - ani_sopa_tm04) / 2.5);
+			}
+			else if (ani_sopa_tm < ani_sopa_tm06) {
+				ani_sopa_giro = 70 * ((ani_sopa_tm - ani_sopa_tm05) / ani_sopa_tm01);
+			}
+			else if (ani_sopa_tm < ani_sopa_tm07) {
+				ani_sopa_giro = 70 - 70 * ((ani_sopa_tm - ani_sopa_tm06) / ani_sopa_tm01);
+			}
+			else if (ani_sopa_tm < ani_sopa_tm08) {
+				ani_sopa_posX = 0.83 - 0.83 * ((ani_sopa_tm - ani_sopa_tm07) / ani_sopa_tm01);
+				ani_sopa_posY = -4.528 * pow((ani_sopa_posX - 0.42), 2) + 0.8;
+				ani_sopa_posZ = -0.32 + 0.32 * ((ani_sopa_tm - ani_sopa_tm07) / ani_sopa_tm01);
+			}
+			else {
+				ani_sopa = false;
+				PlaySound(NULL, NULL, 0);
+				thread th_01(play_music, 1);
+				if (th_01.joinable()) {
+					th_01.join();
+				}
+			}
+			
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.52f + ani_sopa_posX, 1.66f + ani_sopa_posY, -2.31f + ani_sopa_posZ));
+		model = glm::rotate(model, ani_sopa_giro * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		cucharon.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		olla_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		olla_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		olla_3.RenderModel();
+
+		//Hamburguesa
+		if (mainWindow.get_btn_o()) {
+			mainWindow.res_btn_o();
+			ani_ham = true;
+			ani_ham_tm = 0.0f;
+			ani_ham_posX_P1 = 0.0f; ani_ham_posY_P1 = 0.0f; ani_ham_posZ_P1 = 0.0f;
+			ani_ham_posX_P2 = 0.0f; ani_ham_posY_P2 = 0.0f; ani_ham_posZ_P2 = 0.0f;
+			ani_ham_posX_P3 = 0.0f; ani_ham_posY_P3 = 0.0f; ani_ham_posZ_P3 = 0.0f;
+			ani_ham_posX_P4 = 0.0f; ani_ham_posY_P4 = 0.0f; ani_ham_posZ_P4 = 0.0f;
+			ani_ham_posX_P5 = 0.0f; ani_ham_posY_P5 = 0.0f; ani_ham_posZ_P5 = 0.0f;
+		}
+
+		if (ani_ham) {
+			ani_ham_tm += deltaTime / del_mod;
+			if (ani_ham_tm < ani_ham_tm01) {
+				ani_ham_posX_P1 = 0.3 * (ani_ham_tm / ani_ham_tm01);
+				ani_ham_posY_P1 = -13.3 * pow((ani_ham_posX_P1 - 0.15), 2) + 0.3;
+				ani_ham_posZ_P1 = 0.4 * (ani_ham_tm / ani_ham_tm01);
+			}
+			else if (ani_ham_tm < ani_ham_tm02) {
+				ani_ham_posX_P2 = 0.3 * ( (ani_ham_tm - ani_ham_tm01) / ani_ham_tm01);
+				ani_ham_posY_P2 = -12.885 * pow((ani_ham_posX_P2 - 0.152), 2) + 0.3;
+				ani_ham_posZ_P2 = -0.2 * ((ani_ham_tm - ani_ham_tm01) / ani_ham_tm01);
+			}
+			else if (ani_ham_tm < ani_ham_tm03) {
+				ani_ham_posX_P3 = 0.3 * ((ani_ham_tm - ani_ham_tm02) / ani_ham_tm01);
+				ani_ham_posY_P3 = -12.428 * pow((ani_ham_posX_P3 - 0.155), 2) + 0.3;
+				ani_ham_posZ_P3 = 0.0f;
+			}
+			else if (ani_ham_tm < ani_ham_tm04) {
+				ani_ham_posX_P4 = 0.3 * ((ani_ham_tm - ani_ham_tm03) / ani_ham_tm01);
+				ani_ham_posY_P4 = -11.96 * pow((ani_ham_posX_P4 - 0.158), 2) + 0.3;
+				ani_ham_posZ_P4 = 0.2 * ((ani_ham_tm - ani_ham_tm03) / ani_ham_tm01);
+			}
+			else if (ani_ham_tm < ani_ham_tm05) {
+				ani_ham_posX_P5 = 0.3 * ((ani_ham_tm - ani_ham_tm04) / ani_ham_tm01);
+				ani_ham_posY_P5 = -11.486 * pow((ani_ham_posX_P5 - 0.161), 2) + 0.3;
+				ani_ham_posZ_P5 = -0.4 * ((ani_ham_tm - ani_ham_tm04) / ani_ham_tm01);
+			}
+			else {
+				ani_ham = false;
+			}
+		}
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		tabla.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_ham_posX_P5, 0.0f + ani_ham_posY_P5, 0.0f + ani_ham_posZ_P5));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		pan_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_ham_posX_P1, 0.0f + ani_ham_posY_P1, 0.0f + ani_ham_posZ_P1));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		pan_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_ham_posX_P2, 0.0f + ani_ham_posY_P2, 0.0f + ani_ham_posZ_P2));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		carne.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_ham_posX_P3, 0.0f + ani_ham_posY_P3, 0.0f + ani_ham_posZ_P3));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		lechuga.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f + ani_ham_posX_P4, 0.0f + ani_ham_posY_P4, 0.0f + ani_ham_posZ_P4));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		jitomate.RenderModel();
+
+		//trastes sucios
+		if (mainWindow.get_btn_l()) {
+			mainWindow.res_btn_l();
+			ani_tra = true;
+			ani_tra_tm = 0.0f;
+			ani_tra_posY_P1 = 0.0f;
+			ani_tra_posY_P2 = 0.0f;
+			ani_tra_posY = 0.0;
+			ani_tra_posZ = 0.0;
+
+			
+			thread th_03(play_music, 3);
+			if (th_03.joinable()) {
+				th_03.join();
+			}
+		}
+
+		if (ani_tra) {
+			ani_tra_tm += deltaTime / del_mod;
+			if (ani_tra_tm < ani_tra_tm01) {
+				ani_tra_posY =  0.50 * (ani_tra_tm / ani_tra_tm01);
+				ani_tra_posY_P1 = ani_tra_posY;
+			}
+			else if (ani_tra_tm < ani_tra_tm02) {
+				ani_tra_posY = 0.50 + 0.02 * sinf(((ani_tra_tm - ani_tra_tm01) / ani_tra_tm01) * 50);
+				ani_tra_posZ = -0.02 * sinf(((ani_tra_tm - ani_tra_tm01) / ani_tra_tm01) * 50);
+			}
+			else if (ani_tra_tm < ani_tra_tm03) {
+				ani_tra_posY = 0.50;
+				ani_tra_posZ = 0.47 * ((ani_tra_tm - ani_tra_tm02) / ani_tra_tm01);
+				ani_tra_posY_P1 = 0.50 - 0.50 * ((ani_tra_tm - ani_tra_tm02) / ani_tra_tm01);
+				ani_tra_posY_P2 = 0.50 * ((ani_tra_tm - ani_tra_tm02) / ani_tra_tm01);
+			}
+			else if (ani_tra_tm < ani_tra_tm04) {
+				ani_tra_posY = 0.50 + 0.02 * sinf(((ani_tra_tm - ani_tra_tm03) / ani_tra_tm01) * 50);
+				ani_tra_posZ = 0.47 -0.02 * sinf(((ani_tra_tm - ani_tra_tm03) / ani_tra_tm01) * 50);
+
+			}
+			else if (ani_tra_tm < ani_tra_tm05) {
+				ani_tra_posY = 0.50 - 0.50 * ((ani_tra_tm - ani_tra_tm04) / ani_tra_tm01);
+				ani_tra_posY_P2 = ani_tra_posY;
+			}
+			else {
+				ani_tra = false;
+				PlaySound(NULL, NULL, 0);
+				thread th_01(play_music, 1);
+				if (th_01.joinable()) {
+					th_01.join();
+				}
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f + ani_tra_posY_P2, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_sucio_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f + ani_tra_posY_P1, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		plato_sucio_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f + ani_tra_posY, 0.0f + ani_tra_posZ + y));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		estropajo_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		trastes_sucios.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		lavadero.RenderModel();
+
+		//puertas pequeñas
+		if (mainWindow.get_btn_2()) {
+			mainWindow.res_btn_2();
+			ani_puerta_cnt01 = true;
+			ani_puerta_cnt01_tm = 0.0f;
+			thread th_04(play_music, 4);
+			if (th_04.joinable()) {
+				th_04.join();
+			}
+		}
+
+		if (ani_puerta_cnt01) {
+			ani_puerta_cnt01_tm += deltaTime / del_mod;
+			if (ani_puerta_cnt01_tm < ani_puerta_cnt01_tm01) {
+				if (ani_puerta_cnt01_tm01_std) {
+					giro_puerta_cnt01 = - 90.0f * (ani_puerta_cnt01_tm / ani_puerta_cnt01_tm01);
+				}
+				else {
+					giro_puerta_cnt01 = - 90.0f + 90.0f * (ani_puerta_cnt01_tm / ani_puerta_cnt01_tm01);
+				}
+			}
+			else {
+				ani_puerta_cnt01 = false;
+				ani_puerta_cnt01_tm01_std = !ani_puerta_cnt01_tm01_std;
+				PlaySound(NULL, NULL, 0);
+				thread th_01(play_music, 1);
+				if (th_01.joinable()) {
+					th_01.join();
+				}
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.75f, 0.71f, -4.94f));
+		model = glm::rotate(model, giro_puerta_cnt01 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta1.RenderModel();
+
+		if (mainWindow.get_btn_3()) {
+			mainWindow.res_btn_3();
+			ani_puerta_cnt02 = true;
+			ani_puerta_cnt02_tm = 0.0f;
+
+			thread th_04(play_music, 4);
+			if (th_04.joinable()) {
+				th_04.join();
+			}
+		}
+
+		if (ani_puerta_cnt02) {
+			ani_puerta_cnt02_tm += deltaTime / del_mod;
+			if (ani_puerta_cnt02_tm < ani_puerta_cnt02_tm01) {
+				if (ani_puerta_cnt02_tm01_std) {
+					giro_puerta_cnt02 = - 90.0f * (ani_puerta_cnt02_tm / ani_puerta_cnt02_tm01);
+				}
+				else {
+					giro_puerta_cnt02 = - 90.0f + 90.0f * (ani_puerta_cnt02_tm / ani_puerta_cnt02_tm01);
+				}
+			}
+			else {
+				ani_puerta_cnt02 = false;
+				ani_puerta_cnt02_tm01_std = !ani_puerta_cnt02_tm01_std;
+				PlaySound(NULL, NULL, 0);
+				thread th_01(play_music, 1);
+				if (th_01.joinable()) {
+					th_01.join();
+				}
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.77f, 0.71f, -4.20f));
+		model = glm::rotate(model, giro_puerta_cnt02 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta2.RenderModel();
+
+		if (mainWindow.get_btn_4()) {
+			mainWindow.res_btn_4();
+			ani_puerta_cnt03 = true;
+			ani_puerta_cnt03_tm = 0.0f;
+
+			thread th_04(play_music, 4);
+			if (th_04.joinable()) {
+				th_04.join();
+			}
+		}
+
+		if (ani_puerta_cnt03) {
+			ani_puerta_cnt03_tm += deltaTime / del_mod;
+			if (ani_puerta_cnt03_tm < ani_puerta_cnt03_tm01) {
+				if (ani_puerta_cnt03_tm01_std) {
+					giro_puerta_cnt03 = 90.0f * (ani_puerta_cnt03_tm / ani_puerta_cnt03_tm01);
+				}
+				else {
+					giro_puerta_cnt03 = 90.0f - 90.0f * (ani_puerta_cnt03_tm / ani_puerta_cnt03_tm01);
+				}
+			}
+			else {
+				ani_puerta_cnt03 = false;
+				ani_puerta_cnt03_tm01_std = !ani_puerta_cnt03_tm01_std;
+				PlaySound(NULL, NULL, 0);
+				thread th_01(play_music, 1);
+				if (th_01.joinable()) {
+					th_01.join();
+				}
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3( 0.77f, 0.70f, -3.43f));
+		model = glm::rotate(model, -giro_puerta_cnt03 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta3.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.79f, 0.69f, -2.08f));
+		model = glm::rotate(model, giro_puerta_cnt03 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		mesa_centro_puerta4.RenderModel();
+
+		//puertas refri
+		if (mainWindow.get_btn_5()) {
+			mainWindow.res_btn_5();
+			ani_puerta_ref01 = true;
+			ani_puerta_ref01_tm = 0.0f;
+		}
+
+		if (ani_puerta_ref01) {
+			ani_puerta_ref01_tm += deltaTime / del_mod;
+			if (ani_puerta_ref01_tm < ani_puerta_ref01_tm01) {
+				if (ani_puerta_ref01_tm01_std) {
+					giro_puerta_ref01 = - 90.0f * (ani_puerta_ref01_tm / ani_puerta_ref01_tm01);
+				}
+				else {
+					giro_puerta_ref01 = - 90.0f + 90.0f * (ani_puerta_ref01_tm / ani_puerta_ref01_tm01);
+				}
+			}
+			else {
+				ani_puerta_ref01 = false;
+				ani_puerta_ref01_tm01_std = !ani_puerta_ref01_tm01_std;
+			}
+		}
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(4.06f, 1.21f, 3.90f));
+		model = glm::rotate(model, giro_puerta_ref01 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_puerta_1.RenderModel();
+
+		if (mainWindow.get_btn_6()) {
+			mainWindow.res_btn_6();
+			ani_puerta_ref02 = true;
+			ani_puerta_ref02_tm = 0.0f;
+		}
+
+		if (ani_puerta_ref02) {
+			ani_puerta_ref02_tm += deltaTime / del_mod;
+			if (ani_puerta_ref02_tm < ani_puerta_ref02_tm01) {
+				if (ani_puerta_ref02_tm01_std) {
+					giro_puerta_ref02 = - 90.0f * (ani_puerta_ref02_tm / ani_puerta_ref02_tm01);
+				}
+				else {
+					giro_puerta_ref02 = - 90.0f + 90.0f * (ani_puerta_ref02_tm / ani_puerta_ref02_tm01);
+				}
+			}
+			else {
+				ani_puerta_ref02 = false;
+				ani_puerta_ref02_tm01_std = !ani_puerta_ref02_tm01_std;
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(2.91f, 1.26f, 3.91f));
+		model = glm::rotate(model, giro_puerta_ref02 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_puerta_2.RenderModel();
+
+		if (mainWindow.get_btn_7()) {
+			mainWindow.res_btn_7();
+			ani_puerta_ref03 = true;
+			ani_puerta_ref03_tm = 0.0f;
+		}
+
+		if (ani_puerta_ref03) {
+			ani_puerta_ref03_tm += deltaTime / del_mod;
+			if (ani_puerta_ref03_tm < ani_puerta_ref03_tm01) {
+				if (ani_puerta_ref03_tm01_std) {
+					giro_puerta_ref03 = - 90.0f * (ani_puerta_ref03_tm / ani_puerta_ref03_tm01);
+				}
+				else {
+					giro_puerta_ref03 = - 90.0f + 90.0f * (ani_puerta_ref03_tm / ani_puerta_ref03_tm01);
+				}
+			}
+			else {
+				ani_puerta_ref03 = false;
+				ani_puerta_ref03_tm01_std = !ani_puerta_ref03_tm01_std;
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1.67f, 1.22f, 3.90f));
+		model = glm::rotate(model, giro_puerta_ref03 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		refri_puerta_3.RenderModel();
+
+		//PUERTA DE METAL
+		if (mainWindow.get_btn_8()) {
+			mainWindow.res_btn_8();
+			ani_puerta_mtl = true;
+			ani_puerta_mtl_tm = 0.0f;
+			thread th_05(play_music, 5);
+			if (th_05.joinable()) {
+				th_05.join();
+			}
+		}
+
+		if (ani_puerta_mtl) {
+			ani_puerta_mtl_tm += deltaTime / del_mod;
+			if (ani_puerta_mtl_tm < ani_puerta_ref03_tm01) {
+				if (ani_puerta_mtl_tm01_std) {
+					giro_puerta_mtl = -90.0f * (ani_puerta_mtl_tm / ani_puerta_mtl_tm01);
+				}
+				else {
+					giro_puerta_mtl = -90.0f + 90.0f * (ani_puerta_mtl_tm / ani_puerta_mtl_tm01);
+				}
+			}
+			else {
+				ani_puerta_mtl = false;
+				ani_puerta_mtl_tm01_std = !ani_puerta_mtl_tm01_std;
+				PlaySound(NULL, NULL, 0);
+				thread th_01(play_music, 1);
+				if (th_01.joinable()) {
+					th_01.join();
+				}
+			}
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(4.87f, 1.37f, 0.95f));
+		model = glm::rotate(model, giro_puerta_mtl * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		puerta_metal.RenderModel();
+
+		//Extractores
+		ani_extr += deltaTime * del_mod;
+
+		if (ani_extr > 1000.0) {
+			ani_extr = 0.0f;
+		}
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(4.98f, 2.49f, -7.50f));
+		model = glm::rotate(model, ani_extr * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		extractor_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.00f, 2.49f, -7.50f));
+		model = glm::rotate(model, ani_extr * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		extractor_2.RenderModel();
+
 		//----------------------------------------------------------------------------------
 		
-		/*
+		
+		
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_bolsa_1.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_bolsa_2.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		papas_bolsa_3.RenderModel();
+
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
@@ -604,58 +1390,28 @@ int main()
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa_centro_aceite.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa_centro_freidora1.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa_centro_freidora2.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta3.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		mesa_centro_puerta4.RenderModel();
-		
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		lavadero.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa1.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		mesa2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		puerta_metal.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -732,157 +1488,30 @@ int main()
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		silla_ext_12.RenderModel();
 
-		
-
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		estante_1.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		estante_2.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		refri_1.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		refri_2.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		refri_3.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		refri_puerta_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		refri_puerta_2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		refri_puerta_3.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		papas_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		papas_2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		papas_3.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		papas_bolsa_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		papas_bolsa_2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		papas_bolsa_3.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		plato_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		plato_2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		olla_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		olla_2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		olla_3.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		cucharon.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		tabla.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pan_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pan_2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		carne.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		lechuga.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		jitomate.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		plato_sucio_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		plato_sucio_2.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		trastes_sucios.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		estropajo_1.RenderModel();
 
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -892,17 +1521,21 @@ int main()
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		extractor_1.RenderModel();
-
-		model = glm::mat4(1.0);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		extractor_2.RenderModel();
+		chef.RenderModel();
 
 		/**/
 
 		glUseProgram(0);
 		mainWindow.swapBuffers();
+
+		if (musica_fondo) {
+			musica_fondo = false;
+			thread th_01(play_music, 1);
+			if (th_01.joinable()) {
+				th_01.join();
+			}
+		}
+
 	}
 
 	return 0;

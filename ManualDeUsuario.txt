@@ -1,0 +1,16 @@
+Movimiento
+A - izquierda
+W - arriba
+S - abajo
+D - derecha
+raton - camara
+
+Animaciones
+1 - puertas exteriores
+2,3,4 - puertas de mesa central
+5,6,7 - puertas de refrigeradores
+8 - puerta de metal
+i - sopa
+o - hamburguesa
+p - papas fritas
+l - trastes
